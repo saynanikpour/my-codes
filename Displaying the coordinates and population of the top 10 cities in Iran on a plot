@@ -1,0 +1,40 @@
+from matplotlib import pyplot as plt
+import numpy as np
+import pandas as pd
+
+cities_data = [
+    {"city": "Tehran", "x": -35.6892, "y": 51.3890, "population": 7153309},
+    {"city": "Mashhad", "x": -36.2605, "y": 59.6168, "population": 2307177},
+    {"city": "Isfahan", "x": -32.6546, "y": 51.6676, "population": 1547164},
+    {"city": "Karaj", "x": -32.6546, "y": 51.6676, "population": 1448075},
+    {"city": "Tabriz", "x": -32.6546, "y": 51.6676, "population": 1424641},
+    {"city": "Shiraz", "x": -32.6546, "y": 51.6676, "population": 1249942},
+    {"city": "Qom", "x": -32.6546, "y": 51.6676, "population": 900000},
+    {"city": "Ahvaz", "x": -32.6546, "y": 51.6676, "population": 841145},
+    {"city": "Kermanshah", "x": -32.6546, "y": 51.6676, "population": 621100},
+    {"city": "Urmia", "x": -32.6546, "y": 51.6676, "population": 3581410},
+
+]
+
+
+city_names = [city["city"] for city in cities_data]
+x_coordinates = [city["x"] for city in cities_data]
+y_coordinates = [city["y"] for city in cities_data]
+populations = [city["population"] for city in cities_data]
+
+colors = ['blue', 'green', 'red', 'purple', 'orange', 'brown', 'pink', 'gray', 'olive', 'cyan']
+
+plt.figure(figsize=(10, 6))
+for i, city in enumerate(city_names):
+    plt.scatter(x_coordinates[i], y_coordinates[i], s=populations[i] / 50000, c=colors[i], alpha=0.5, label=city)
+    plt.text(x_coordinates[i], y_coordinates[i], city, fontsize=8, ha='right', va='bottom')
+
+plt.xlabel('Longitude')
+plt.ylabel('Latitude')
+plt.title('Top 10 Most Populous Cities in Iran')
+plt.grid(True)
+
+
+plt.legend()
+
+plt.show()
