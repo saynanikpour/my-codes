@@ -1,0 +1,30 @@
+import matplotlib.pyplot as plt
+
+dates = ["2023-07-01", "2023-07-02", "2023-07-03", "2023-07-04", "2023-07-05", "2023-07-06"]
+cities = ["Tehran", "Mashhad", "Isfahan", "Karaj", "Tabriz", "Shiraz", "Qom", "Ahvaz", "Kermanshah", "Urmia"]
+cases = [
+    [1500, 1600, 1750, 1800, 1950, 2000],
+    [1200, 1300, 1400, 1500, 1600, 1700],
+    [800, 900, 1000, 1100, 1200, 1300],
+    [750, 800, 850, 900, 950, 1000],
+    [600, 650, 700, 750, 800, 850],
+    [500, 550, 600, 650, 700, 750],
+    [400, 420, 440, 460, 480, 500],
+    [300, 310, 320, 330, 340, 350],
+    [200, 210, 220, 230, 240, 250],
+    [100, 110, 120, 130, 140, 150],
+]
+
+plt.plot(figsize=(10, 6))
+for i in range(len(cities)):
+    plt.plot(dates, cases[i], label=cities[i])
+
+plt.xlabel("Date")
+plt.ylabel("Number of COVID-19 Cases")
+plt.title("COVID-19 Trend in Major Cities of Iran")
+plt.xticks(rotation=45)
+plt.grid(True)
+
+plt.legend()
+
+plt.show()
