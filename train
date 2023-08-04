@@ -1,0 +1,23 @@
+import matplotlib.pyplot as plt
+import pandas as pd
+from persiantools.jdatetime import JalaliDate
+from datetime import  datetime
+
+btc_df = pd.read_csv("BTC-USD.csv")
+
+btc_df.info()
+
+btc_df["Open"] = pd.to_numeric(btc_df["Open"], errors="coerce")
+btc_df["Close"] = pd.to_numeric(btc_df["Close"], errors="coerce")
+btc_df["Benefit"] = btc_df["Close"]- btc_df["Open"]
+
+btc_df["Jalali"] = btc_df["Date"].apply(lambda d:JalaliDate(datetime.strptime(d, "%Y-%m-%d")))
+btc_df["Year"] = btc_df["Date"].apply(lambda d:JalaliDate(datetime.strptime(d, "%Y-%m-%d")).year)
+btc_df["WeekOfYear"] = btc_df["Date"].apply(lambda d:JalaliDate(datetime.strptime(d, "%Y-%m-%d")).week_of_year())
+btc_df["WeekDay"] = btc_df["Date"].apply(lambda d:JalaliDate(datetime.strptime(d, "%Y-%m-%d")).isoweekday())
+btc_df["Month"] = btc_df["Date"].apply(lambda d:JalaliDate(datetime.strptime(d, "%Y-%m-%d")).month)
+
+print(btc_df)
+
+sumday = btc_df.groupby("WeekDay").sum
+
