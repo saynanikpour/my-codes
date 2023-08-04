@@ -3,16 +3,16 @@ import numpy as np
 import pandas as pd
 
 cities_data = [
-    {"city": "Tehran", "x": -35.6892, "y": 51.3890, "population": 7153309},
-    {"city": "Mashhad", "x": -36.2605, "y": 59.6168, "population": 2307177},
-    {"city": "Isfahan", "x": -32.6546, "y": 51.6676, "population": 1547164},
-    {"city": "Karaj", "x": -32.6546, "y": 51.6676, "population": 1448075},
-    {"city": "Tabriz", "x": -32.6546, "y": 51.6676, "population": 1424641},
-    {"city": "Shiraz", "x": -32.6546, "y": 51.6676, "population": 1249942},
-    {"city": "Qom", "x": -32.6546, "y": 51.6676, "population": 900000},
-    {"city": "Ahvaz", "x": -32.6546, "y": 51.6676, "population": 841145},
-    {"city": "Kermanshah", "x": -32.6546, "y": 51.6676, "population": 621100},
-    {"city": "Urmia", "x": -32.6546, "y": 51.6676, "population": 3581410},
+    {"city": "Tehran", "x": 35.6892, "y": -51.3890, "population": 7153309},
+    {"city": "Mashhad", "x": 36.2605, "y": -59.6168, "population": 2307177},
+    {"city": "Isfahan", "x": 32.6546, "y": -51.6676, "population": 1547164},
+    {"city": "Karaj", "x": 32.6546, "y": -51.6676, "population": 1448075},
+    {"city": "Tabriz", "x": 32.6546, "y": -51.6676, "population": 1424641},
+    {"city": "Shiraz", "x": 29.6546, "y": -52.6676, "population": 1249942},
+    {"city": "Qom", "x": 34.6546, "y": -50.6676, "population": 900000},
+    {"city": "Ahvaz", "x": 31.6546, "y": -41.6676, "population": 841145},
+    {"city": "Kermanshah", "x": 34.6546, "y": -47.6676, "population": 621100},
+    {"city": "Urmia", "x": 37.6546, "y": -45.6676, "population": 3581410},
 
 ]
 
