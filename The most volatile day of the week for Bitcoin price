@@ -1,0 +1,28 @@
+import pandas as pd
+from matplotlib import pyplot as plt
+from persiantools.jdatetime import JalaliDate
+from datetime import  datetime
+
+df = pd.read_csv("BTC-USD.csv")
+df["Benefit"] = df["Close"] - df["Open"]
+
+
+df["Jalali"] = df["Date"].apply(lambda d:JalaliDate(datetime.strptime(d, "%Y-%m-%d")))
+df["WeekDay"] = df["Date"].apply(lambda d:JalaliDate(datetime.strptime(d, "%Y-%m-%d")).isoweekday())
+
+std_by_day = df.groupby("WeekDay")["Benefit"].std()
+
+
+plt.figure(figsize=(10, 6))
+std_by_day.plot(kind="bar", color='orange', alpha=0.7)
+plt.xlabel("Day of the Week")
+plt.ylabel("Standard Deviation")
+plt.title("Average Standard Deviation for Each Day of the Week")
+plt.xticks(rotation=0)
+plt.tight_layout()
+
+plt.show()
+
+print("The most volatile day of the week for Bitcoin price : ")
+print("jomee ")
+
