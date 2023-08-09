@@ -1,0 +1,30 @@
+import pandas as pd
+from matplotlib import pyplot as plt
+from persiantools.jdatetime import JalaliDate
+from datetime import  datetime
+
+df = pd.read_csv("BTC-USD.csv")
+df["Benefit"] = df["Close"] - df["Open"]
+
+
+df["Jalali"] = df["Date"].apply(lambda d:JalaliDate(datetime.strptime(d, "%Y-%m-%d")))
+df["WeekDay"] = df["Date"].apply(lambda d:JalaliDate(datetime.strptime(d, "%Y-%m-%d")).isoweekday())
+
+print(df)
+
+grouped = df.groupby("WeekDay")["Benefit"].sum()
+
+print(grouped)
+
+plt.plot(grouped.index, grouped.values, marker='o')
+plt.xlabel('Weekday')
+plt.ylabel('Total Benefit')
+plt.title('Total Benefit by Weekday')
+plt.xticks(range(1, 8), ['Shanbe', 'Yekshanbe', 'Doshanbe', 'Seshanbe', 'Chaharshanbe', 'Panjshanbe', 'Jome'])
+plt.grid(True)
+plt.show()
+
+
+
+print ("Best Day for inveting:")
+print("3 shanbe")
