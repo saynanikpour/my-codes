@@ -1,0 +1,56 @@
+from datetime import datetime
+import pandas as pd
+from persiantools.jdatetime import JalaliDate
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("BTC-USD.csv")
+df["Benefit"] = df["Close"] - df["Open"]
+
+df["Jalali"] = df["Date"].apply(lambda d: JalaliDate(datetime.strptime(d, "%Y-%m-%d")))
+df["WeekDay"] = df["Date"].apply(lambda d: JalaliDate(datetime.strptime(d, "%Y-%m-%d")).isoweekday())
+df["Date"] = pd.to_datetime(df["Date"])
+df = df.set_index('Date')
+
+start_date = '2022-08-06'
+end_date = '2022-11-02'
+valid_dates = df[(df.index >= start_date) & (df.index <= end_date)].index
+
+initial_capital = 1000
+current_capital = initial_capital
+capital_changes = []
+buy_dates = []
+sell_dates = []
+
+buy_price = df.loc[valid_dates[0], 'Open']
+
+for i in range(0, len(valid_dates)):
+    if i + 1 < len(valid_dates):
+        if valid_dates[i].weekday() == 1:
+            buy_price = df.loc[valid_dates[i], 'Open']
+            buy_dates.append(valid_dates[i])
+            current_capital -= buy_price
+        elif valid_dates[i].weekday() == 5:
+            sell_price = df.loc[valid_dates[i], 'Close']
+            capital_change = (sell_price - buy_price) / buy_price * current_capital
+            capital_changes.append(capital_change)
+            sell_dates.append(valid_dates[i])
+            current_capital += capital_change
+
+final_capital = initial_capital + sum(capital_changes)
+print(f"Final Capital: ${final_capital:.2f}")
+
+cumulative_changes = [initial_capital]
+for change in capital_changes:
+    cumulative_changes.append(cumulative_changes[-1] + change)
+
+plt.figure(figsize=(10, 6))
+plt.plot(sell_dates, cumulative_changes[1:], marker='o', linestyle='-', color='m', label='Fund')
+plt.axhline(y=initial_capital, color='c', linestyle='--', label='Initial Capital')
+
+plt.title('Profit and Loss from Bitcoin Trading')
+plt.xlabel('Date')
+plt.ylabel('Capital')
+plt.legend()
+plt.grid()
+
+plt.show()
