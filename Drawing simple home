@@ -33,37 +33,45 @@ cv2.imshow("house", image)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-kernel_right = np.array ([ -1 , 1])
+kernel_right = np.array([[0, 0, 0],
+                         [0, 1, -1],
+                         [0, 0, 0]])
 
-result = cv2.filter2D(image,-1, kernel_right)
-print(result.shape)
-
-plt.imshow(result)
-plt.show()
-
-kernel_left = np.array ([ 1 , -1])
-
-result = cv2.filter2D(image,-1, kernel_left)
-print(result.shape)
-
-plt.imshow(result)
-plt.show()
-
-kernel_up = np.array ([[-1 ] ,
-                        [ 1]])
-
-result = cv2.filter2D(image,-1, kernel_up)
-print(result.shape)
-
-plt.imshow(result)
+result_right = cv2.filter2D(image, -1, kernel_right)
+plt.imshow(result_right)
 plt.show()
 
 
-kernel_down = np.array ([[ 1 ] ,
-                        [-1]])
+kernel_left = np.array([[0, 0, 0],
+                        [-1, 1, 0],
+                        [0, 0, 0]])
 
-result = cv2.filter2D(image,-1, kernel_down)
-print(result.shape)
+result_left = cv2.filter2D(image, -1, kernel_left)
+plt.imshow(result_left)
+plt.show()
 
-plt.imshow(result)
+
+kernel_up = np.array([[-1, 1, 0],
+                      [0, 0, 0],
+                      [0, 0, 0]])
+
+result_up = cv2.filter2D(image, -1, kernel_up)
+plt.imshow(result_up)
+plt.show()
+
+
+kernel_down = np.array([[0, 0, 0],
+                        [0, 0, 0],
+                        [-1, 1, 0]])
+
+result_down = cv2.filter2D(image, -1, kernel_down)
+plt.imshow(result_down)
+plt.show()
+
+combined_result = cv2.add(result_right, result_left)
+combined_result = cv2.add(combined_result, result_up)
+combined_result = cv2.add(combined_result, result_down)
+
+
+plt.imshow(combined_result, cmap='gray')
 plt.show()
