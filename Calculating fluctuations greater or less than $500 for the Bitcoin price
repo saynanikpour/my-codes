@@ -1,0 +1,37 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+data = pd.read_csv('BTC-USD.csv')
+
+data['Date'] = pd.to_datetime(data['Date'])
+
+data['Price_Difference'] = data['Close'].diff()
+
+list_up = []
+list_down = []
+
+
+for i in range(len(data) - 1):
+    if abs(data['Price_Difference'][i + 1]) > 500:
+        list_up.append(data['Date'][i])
+    else:
+        list_down.append(data['Date'][i])
+
+
+plt.figure(figsize=(10, 6))
+plt.plot(data['Date'], data['Close'], label='Bitcoin Price')
+plt.xlabel('Date')
+plt.ylabel('Price')
+plt.title('Bitcoin Price Fluctuation Over Time')
+plt.legend()
+plt.show()
+
+
+plt.figure(figsize=(10, 4))
+plt.plot(list_up, [1] * len(list_up), 'go', label='List Up')
+plt.plot(list_down, [0] * len(list_down), 'ro', label='List Down')
+plt.yticks([0, 1], ['List Down', 'List Up'])
+plt.xlabel('Date')
+plt.title('Bitcoin Price Fluctuation Categorized')
+plt.legend()
+plt.show()
