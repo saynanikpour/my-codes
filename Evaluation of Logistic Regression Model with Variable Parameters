@@ -1,0 +1,59 @@
+import time
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+import seaborn as sns
+from sklearn.linear_model import LogisticRegression
+from sklearn.datasets import make_blobs
+from sklearn.metrics import classification_report
+
+samples = [100, 200, 500, 1000, 5000]
+features = [2, 3, 4, 5, 6, 7, 8, 9]
+std = np.arange(1, 5, 0.2)
+best_score = 0
+best_params = {}
+
+results = []
+
+for s in samples:
+    for f in features:
+        for st in std:
+            t0 = time.time()
+            X, Y = make_blobs(n_samples=s, n_features=f, cluster_std=st, random_state=32)
+            model = LogisticRegression()
+            model.fit(X, Y)
+            predict = model.predict(X)
+            score = model.score(X, Y)
+            t1 = time.time()
+            times = (t1 - t0)
+            report = classification_report(predict, Y, output_dict=True)
+
+            results.append({"samples": s, "features": f, "std": st, "time": times, "score": score})
+
+            if score > best_score:
+                best_score = score
+                best_params = {"samples": s, "features": f, "std": st}
+
+df = pd.DataFrame(results)
+
+fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(12, 10))
+fig.subplots_adjust(hspace=0.5)
+sns.set(style="whitegrid")
+
+#Accuracy vs. Samples
+sns.lineplot(data=df, x='samples', y='score', ax=axes[0, 0])
+axes[0, 0].set_title("Accuracy vs. Samples")
+
+#Accuracy vs. Features
+sns.lineplot(data=df, x='features', y='score', ax=axes[0, 1])
+axes[0, 1].set_title("Accuracy vs. Features")
+
+#Accuracy vs. Cluster Std
+sns.lineplot(data=df, x='std', y='score', ax=axes[1, 0])
+axes[1, 0].set_title("Accuracy vs. Cluster Std")
+
+axes[1, 1].axis('off')
+axes[1, 1].text(0.1, 0.5, f"Best Parameters:\n{best_params}\nBest Accuracy: {best_score:.4f}", fontsize=12)
+
+plt.savefig("model_evaluation.png")
+plt.show()
