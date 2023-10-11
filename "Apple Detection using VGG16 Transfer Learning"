@@ -1,0 +1,69 @@
+import os
+import cv2
+import numpy as np
+from sklearn.model_selection import train_test_split
+from tensorflow.keras.applications import VGG16
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Flatten, Dropout
+from tensorflow.keras.optimizers import Adam
+
+# Load and preprocess the data
+positive_image_dir = "positive/"
+negative_image_dir = "negative/"
+
+positive_images = []
+negative_images = []
+
+for filename in os.listdir(positive_image_dir):
+    img = cv2.imread(os.path.join(positive_image_dir, filename))
+    if img is not None:
+        positive_images.append(cv2.resize(img, (224, 224)))
+
+for filename in os.listdir(negative_image_dir):
+    img = cv2.imread(os.path.join(negative_image_dir, filename))
+    if img is not None:
+        negative_images.append(cv2.resize(img, (224, 224)))
+
+X_positive = np.array(positive_images)
+X_negative = np.array(negative_images)
+X = np.concatenate((X_positive, X_negative))
+y = np.array([1] * len(X_positive) + [0] * len(X_negative))
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Load the pre-trained VGG16 model
+base_model = VGG16(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
+
+# Create a new model with custom dense layers
+model = Sequential()
+model.add(base_model)
+model.add(Flatten())
+model.add(Dense(512, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(1, activation='sigmoid'))
+
+# Compile the model
+model.compile(loss='binary_crossentropy', optimizer=Adam(learning_rate=0.0001), metrics=['accuracy'])
+
+# Train the model
+model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=10)
+
+# Evaluate the model on test data
+accuracy = model.evaluate(X_test, y_test)[1]
+
+model.save('apple_detection_model.h5')
+
+
+# Make predictions on a test image
+test_image = cv2.imread("test2.jpg")
+test_image = cv2.resize(test_image, (224, 224))
+test_image = np.expand_dims(test_image, axis=0)
+prediction = model.predict(test_image)
+
+if prediction > 0.5:
+    print("The image contains an apple.")
+else:
+    print("No apple detected in the image.")
+print(f"Accuracy on test data: {accuracy}")
+
